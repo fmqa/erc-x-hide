@@ -77,11 +77,11 @@
 (transient-define-prefix erc-x-hide ()
   "Transient to hide message types in the current channel"
   [:class transient-row "Channel"
-   ("J" "JOIN" "JOIN" :init-value erc-x--hide-JOIN)
-   ("K" "KICK" "KICK" :init-value erc-x--hide-KICK)
-   ("P" "PART" "PART" :init-value erc-x--hide-PART)]
+          ("J" "JOIN" "JOIN" :init-value erc-x--hide-JOIN)
+          ("K" "KICK" "KICK" :init-value erc-x--hide-KICK)
+          ("P" "PART" "PART" :init-value erc-x--hide-PART)]
   [:class transient-row "Network"
-   ("Q" "QUIT" "QUIT" :init-value erc-x--hide-QUIT)]
+          ("Q" "QUIT" "QUIT" :init-value erc-x--hide-QUIT)]
   [("RET" "Apply" erc-x-hide-apply)])
 
 (defun erc-x-hide-apply (&optional args)
@@ -91,9 +91,9 @@
     ;; Use `erc-network-hide-list' for QUIT
     (let* ((selection (member "QUIT" args))
            (network-node (or (assoc network erc-network-hide-list)
-                            (and args (let ((entry (list network)))
-                                        (push entry erc-network-hide-list)
-                                        entry))))
+                             (and args (let ((entry (list network)))
+                                         (push entry erc-network-hide-list)
+                                         entry))))
            (current (member "QUIT" (cdr network-node))))
       (cond
        ((and selection (not current))
