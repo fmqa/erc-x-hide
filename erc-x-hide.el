@@ -5,7 +5,7 @@
 ;; Author: Alcor <alcor@tilde.club>
 ;; URL: https://github.com/fmqa/erc-x-hide
 ;; Keywords: erc irc
-;; Version: 0.2
+;; Version: 0.3
 ;; Package-Requires: ((emacs "29.1") (erc "5.6") (transient "0.4.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -40,7 +40,7 @@
 
 (defvar erc-x-hide-list nil "Erc network-channel-message trie specifying message types to hide")
 
-(defun erc-x--hide-current-network ()
+(defun erc-x-hide--current-network ()
   "Return the name of the current network."
   (or (and (erc-network) (erc-network-name))
       (erc-shorten-server-name
@@ -49,7 +49,7 @@
 
 (defun erc-x-hide-list-p (command &optional channel network)
   "Query ERC-X-HIDE-LIST"
-  (setq network (or network (erc-x--hide-current-network)))
+  (setq network (or network (erc-x-hide--current-network)))
   (setq channel (or channel (buffer-name)))
   (when-let* ((network-node (assoc network erc-x-hide-list))
               (channel-node (assoc channel (cdr network-node))))
@@ -60,17 +60,17 @@
   (erc-x-hide-list-p (erc-response.command parsed)
                      (car (erc-response.command-args parsed))))
 
-(defun erc-x--hide-JOIN (obj)
+(defun erc-x-hide--JOIN (obj)
   (oset obj value (erc-x-hide-list-p "JOIN")))
 
-(defun erc-x--hide-PART (obj)
+(defun erc-x-hide--PART (obj)
   (oset obj value (erc-x-hide-list-p "PART")))
 
-(defun erc-x--hide-KICK (obj)
+(defun erc-x-hide--KICK (obj)
   (oset obj value (erc-x-hide-list-p "KICK")))
 
-(defun erc-x--hide-QUIT (obj)
-  (oset obj value (when-let* ((network (erc-x--hide-current-network))
+(defun erc-x-hide--QUIT (obj)
+  (oset obj value (when-let* ((network (erc-x-hide--current-network))
                               (node (assoc network erc-network-hide-list)))
                     (member "QUIT" (cdr node)))))
 ;; Main transient menu
@@ -78,17 +78,17 @@
 (transient-define-prefix erc-x-hide ()
   "Transient to hide message types in the current channel"
   [:class transient-row "Channel"
-          ("J" "JOIN" "JOIN" :init-value erc-x--hide-JOIN)
-          ("K" "KICK" "KICK" :init-value erc-x--hide-KICK)
-          ("P" "PART" "PART" :init-value erc-x--hide-PART)]
+          ("J" "JOIN" "JOIN" :init-value erc-x-hide--JOIN)
+          ("K" "KICK" "KICK" :init-value erc-x-hide--KICK)
+          ("P" "PART" "PART" :init-value erc-x-hide--PART)]
   [:class transient-row "Network"
-          ("Q" "QUIT" "QUIT" :init-value erc-x--hide-QUIT)]
+          ("Q" "QUIT" "QUIT" :init-value erc-x-hide--QUIT)]
   [("RET" "Apply" erc-x-hide-apply)])
 
 (defun erc-x-hide-apply (&optional args)
   "Hide the given message types in the current channel."
   (interactive (list (transient-args 'erc-x-hide)))
-  (when-let* ((network (erc-x--hide-current-network)))
+  (when-let* ((network (erc-x-hide--current-network)))
     ;; Use `erc-network-hide-list' for QUIT
     (let* ((selection (member "QUIT" args))
            (network-node (or (assoc network erc-network-hide-list)
