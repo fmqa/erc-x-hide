@@ -36,7 +36,7 @@
 ;; override this.
 
 (require 'transient)
-(require 'erc)
+(require 'erc-common)
 
 (defvar erc-x-hide-list nil "Erc network-channel-message trie specifying message types to hide")
 
