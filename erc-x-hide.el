@@ -5,7 +5,7 @@
 ;; Author: Alcor <alcor@tilde.club>
 ;; URL: https://github.com/fmqa/erc-x-hide
 ;; Keywords: erc irc
-;; Version: 0.3
+;; Version: 0.4
 ;; Package-Requires: ((emacs "29.1") (erc "5.6") (transient "0.4.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -26,9 +26,11 @@
 ;; Installation via `use-package':
 
 ;; (use-package erc-x-hide
-;;   :defer t
+;;   :after erc
 ;;   :vc (:url "https://github.com/fmqa/erc-x-hide.git" :branch "main")
-;;   :bind (:map erc-mode-map ("C-c h" . erc-x-hide)))
+;;   :bind (:map erc-mode-map ("C-c h" . erc-x-hide))
+;;   :config
+;;   (setopt erc-modules (seq-union erc-modules '(x-hide))))
 
 ;; If you are using Emacs ≤ 30.0, you will need to update the built-in package
 ;; `transient'. By default, `package.el' will not upgrade a built-in package.
